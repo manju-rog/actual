@@ -1,50 +1,30 @@
-// Our App - now showing just P, A, V letters like your original!
+// Our App - now with MONTHLY calendar like your original design!
 import React, { useState } from "react";
 import "./App.css";
 
 function App() {
   const [employees] = useState([
-    {
-      id: 1,
-      name: "John Smith",
-      department: "Engineering",
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      department: "Marketing",
-    },
-    {
-      id: 3,
-      name: "Mike Wilson",
-      department: "HR",
-    },
+    { id: 1, name: "Manju", department: "Administrator" },
+    { id: 2, name: "Shreyas", department: "Development" },
+    { id: 3, name: "Ganesh", department: "Development" },
+    { id: 4, name: "Suhas", department: "Development" },
+    { id: 5, name: "Anushri", department: "Quality Assurance" },
   ]);
 
-  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+  // Days of the month (like your original!)
+  const monthDays = Array.from({ length: 31 }, (_, i) => i + 1);
 
+  // Monthly status data (August 2025 like your screenshot)
   const [employeeStatus, setEmployeeStatus] = useState({
-    1: {
-      Mon: "Present",
-      Tue: "Present",
-      Wed: "Absent",
-      Thu: "Present",
-      Fri: "Vacation",
-    },
-    2: {
-      Mon: "Absent",
-      Tue: "Present",
-      Wed: "Present",
-      Thu: "Vacation",
-      Fri: "Present",
-    },
-    3: {
-      Mon: "Present",
-      Tue: "Vacation",
-      Wed: "Present",
-      Thu: "Present",
-      Fri: "Absent",
-    },
+    1: Object.fromEntries(
+      monthDays.map((day) => [day, day === 8 ? "Absent" : "Present"])
+    ),
+    2: Object.fromEntries(
+      monthDays.map((day) => [day, day === 15 ? "Vacation" : "Present"])
+    ),
+    3: Object.fromEntries(monthDays.map((day) => [day, "Present"])),
+    4: Object.fromEntries(monthDays.map((day) => [day, "Present"])),
+    5: Object.fromEntries(monthDays.map((day) => [day, "Present"])),
   });
 
   const changeStatus = (employeeId, day, newStatus) => {
@@ -57,7 +37,6 @@ function App() {
     }));
   };
 
-  // Function to get just the letter (like your original!)
   const getStatusLetter = (status) => {
     switch (status) {
       case "Present":
@@ -73,14 +52,18 @@ function App() {
 
   return (
     <div className="app">
-      <h1>My Absence Management Grid</h1>
+      <h1>🗓️ Absence Management Grid</h1>
+      <p>
+        Track employee attendance for August 2025 - Click cells to edit, then
+        Save Changes
+      </p>
 
       <div className="calendar-container">
-        <div className="calendar-grid">
-          {/* Header row */}
+        <div className="monthly-grid">
+          {/* Header row with all month days */}
           <div className="grid-header">
             <div className="employee-header">Employee</div>
-            {weekDays.map((day) => (
+            {monthDays.map((day) => (
               <div key={day} className="day-header">
                 {day}
               </div>
@@ -95,22 +78,19 @@ function App() {
                 <div className="employee-dept">{employee.department}</div>
               </div>
 
-              {weekDays.map((day) => (
+              {monthDays.map((day) => (
                 <div key={day} className="day-cell">
                   <select
                     value={employeeStatus[employee.id][day]}
                     onChange={(e) =>
                       changeStatus(employee.id, day, e.target.value)
                     }
-                    className={`status-select ${employeeStatus[employee.id][
-                      day
-                    ].toLowerCase()}`}
+                    className="status-select"
                   >
                     <option value="Present">Present</option>
                     <option value="Absent">Absent</option>
                     <option value="Vacation">Vacation</option>
                   </select>
-                  {/* This shows just the letter like your original! */}
                   <div
                     className={`status-badge ${employeeStatus[employee.id][
                       day
