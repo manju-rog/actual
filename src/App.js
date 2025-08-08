@@ -1,4 +1,4 @@
-// Our App - now with MONTHLY calendar like your original design!
+// Our App - now with professional action buttons like your original!
 import React, { useState } from "react";
 import "./App.css";
 
@@ -11,10 +11,8 @@ function App() {
     { id: 5, name: "Anushri", department: "Quality Assurance" },
   ]);
 
-  // Days of the month (like your original!)
   const monthDays = Array.from({ length: 31 }, (_, i) => i + 1);
 
-  // Monthly status data (August 2025 like your screenshot)
   const [employeeStatus, setEmployeeStatus] = useState({
     1: Object.fromEntries(
       monthDays.map((day) => [day, day === 8 ? "Absent" : "Present"])
@@ -27,6 +25,9 @@ function App() {
     5: Object.fromEntries(monthDays.map((day) => [day, "Present"])),
   });
 
+  // NEW: Track if there are unsaved changes
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+
   const changeStatus = (employeeId, day, newStatus) => {
     setEmployeeStatus((prev) => ({
       ...prev,
@@ -35,6 +36,7 @@ function App() {
         [day]: newStatus,
       },
     }));
+    setHasUnsavedChanges(true); // Mark as having unsaved changes
   };
 
   const getStatusLetter = (status) => {
@@ -50,13 +52,59 @@ function App() {
     }
   };
 
+  // NEW: Action button functions
+  const handleSaveChanges = () => {
+    // Simulate saving to database
+    console.log("Saving attendance data...", employeeStatus);
+    setHasUnsavedChanges(false);
+    alert("✅ Changes saved successfully!");
+  };
+
+  const handleExportExcel = () => {
+    // Simulate Excel export
+    console.log("Exporting to Excel...", employeeStatus);
+    alert("📊 Excel file exported successfully!");
+  };
+
+  const handleSendEmail = () => {
+    // Simulate email sending
+    console.log("Sending email summary...");
+    alert("📧 Email summary sent successfully!");
+  };
+
   return (
     <div className="app">
-      <h1>🗓️ Absence Management Grid</h1>
-      <p>
-        Track employee attendance for August 2025 - Click cells to edit, then
-        Save Changes
-      </p>
+      {/* Header Section */}
+      <div className="header-section">
+        <div className="title-area">
+          <h1>🗓️ Absence Management Grid</h1>
+          <p>
+            Track employee attendance for August 2025 - Click cells to edit,
+            then Save Changes
+          </p>
+        </div>
+
+        {/* NEW: Action Buttons (like your original!) */}
+        <div className="action-buttons">
+          {hasUnsavedChanges && (
+            <div className="unsaved-indicator">⚠️ Unsaved changes</div>
+          )}
+          <button onClick={handleSendEmail} className="action-btn email-btn">
+            📧 Send Email
+          </button>
+          <button onClick={handleExportExcel} className="action-btn export-btn">
+            📊 Export Excel
+          </button>
+          <button
+            onClick={handleSaveChanges}
+            className={`action-btn save-btn ${
+              hasUnsavedChanges ? "has-changes" : ""
+            }`}
+          >
+            💾 Save Changes
+          </button>
+        </div>
+      </div>
 
       <div className="calendar-container">
         <div className="monthly-grid">
