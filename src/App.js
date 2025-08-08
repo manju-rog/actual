@@ -1,63 +1,111 @@
-// Our App - now with absence status and buttons!
+// Our App - now with a calendar grid view!
 import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  // Our employees now have absence status!
-  const [employees, setEmployees] = useState([
+  // Let's add dates to track absences across days
+  const [employees] = useState([
     {
       id: 1,
       name: "John Smith",
       department: "Engineering",
-      status: "Present",
     },
     {
       id: 2,
       name: "Sarah Johnson",
       department: "Marketing",
-      status: "Absent",
     },
     {
       id: 3,
       name: "Mike Wilson",
       department: "HR",
-      status: "Present",
     },
   ]);
 
-  // This function changes an employee's status when button is clicked
-  const toggleStatus = (employeeId) => {
-    setEmployees(
-      employees.map((employee) =>
-        employee.id === employeeId
-          ? {
-              ...employee,
-              status: employee.status === "Present" ? "Absent" : "Present",
-            }
-          : employee
-      )
-    );
+  // Simple week days for our calendar
+  const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+
+  // Employee status for each day (this is like a mini database!)
+  const [employeeStatus, setEmployeeStatus] = useState({
+    1: {
+      Mon: "Present",
+      Tue: "Present",
+      Wed: "Absent",
+      Thu: "Present",
+      Fri: "Vacation",
+    },
+    2: {
+      Mon: "Absent",
+      Tue: "Present",
+      Wed: "Present",
+      Thu: "Vacation",
+      Fri: "Present",
+    },
+    3: {
+      Mon: "Present",
+      Tue: "Vacation",
+      Wed: "Present",
+      Thu: "Present",
+      Fri: "Absent",
+    },
+  });
+
+  // Function to change status for a specific employee on a specific day
+  const changeStatus = (employeeId, day, newStatus) => {
+    setEmployeeStatus((prev) => ({
+      ...prev,
+      [employeeId]: {
+        ...prev[employeeId],
+        [day]: newStatus,
+      },
+    }));
   };
 
   return (
     <div className="app">
-      <h1>My Simple Absence Manager</h1>
+      <h1>My Absence Management Grid</h1>
 
-      {employees.map((employee) => (
-        <div key={employee.id} className="employee-card">
-          <h3>{employee.name}</h3>
-          <p>Department: {employee.department}</p>
-          <p className={`status ${employee.status.toLowerCase()}`}>
-            Status: {employee.status}
-          </p>
-          <button
-            onClick={() => toggleStatus(employee.id)}
-            className="toggle-btn"
-          >
-            Mark as {employee.status === "Present" ? "Absent" : "Present"}
-          </button>
+      <div className="calendar-grid">
+        {/* Header row with days */}
+        <div className="grid-header">
+          <div className="employee-name-header">Employee</div>
+          {weekDays.map((day) => (
+            <div key={day} className="day-header">
+              {day}
+            </div>
+          ))}
         </div>
-      ))}
+
+        {/* Employee rows */}
+        {employees.map((employee) => (
+          <div key={employee.id} className="employee-row">
+            <div className="employee-info">
+              <strong>{employee.name}</strong>
+              <br />
+              <small>{employee.department}</small>
+            </div>
+
+            {/* Status for each day */}
+            {weekDays.map((day) => (
+              <div key={day} className="day-cell">
+                <select
+                  value={employeeStatus[employee.id][day]}
+                  onChange={(e) =>
+                    changeStatus(employee.id, day, e.target.value)
+                  }
+                  className={`status-select ${employeeStatus[employee.id][
+                    day
+                  ].toLowerCase()}`}
+                >
+                  <option value="Present">P</option>
+                  <option value="Absent">A</option>
+                  <option value="Vacation">V</option>
+                </select>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

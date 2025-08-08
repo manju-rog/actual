@@ -47,3 +47,60 @@
 .toggle-btn:hover {
   background-color: #0056b3;
 }
+/* Only YOUR 3 status colors */
+.status.present {
+  color: green;
+  font-weight: bold;
+}
+
+.status.absent {
+  color: red;
+  font-weight: bold;
+}
+
+.status.vacation {
+  color: blue;
+  font-weight: bold;
+}
+
+/* Dropdown styling */
+.status-dropdown {
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.status-dropdown:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Status select styling */
+.status-select {
+  width: 40px;
+  height: 30px;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.status-select.present {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-select.absent {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.status-select.vacation {
+  background-color: #cce7ff;
+  color: #004085;
+}
