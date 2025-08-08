@@ -1,9 +1,8 @@
-// Our App - now with a calendar grid view!
+// Our App - now showing just P, A, V letters like your original!
 import React, { useState } from "react";
 import "./App.css";
 
 function App() {
-  // Let's add dates to track absences across days
   const [employees] = useState([
     {
       id: 1,
@@ -22,10 +21,8 @@ function App() {
     },
   ]);
 
-  // Simple week days for our calendar
   const weekDays = ["Mon", "Tue", "Wed", "Thu", "Fri"];
 
-  // Employee status for each day (this is like a mini database!)
   const [employeeStatus, setEmployeeStatus] = useState({
     1: {
       Mon: "Present",
@@ -50,7 +47,6 @@ function App() {
     },
   });
 
-  // Function to change status for a specific employee on a specific day
   const changeStatus = (employeeId, day, newStatus) => {
     setEmployeeStatus((prev) => ({
       ...prev,
@@ -61,50 +57,72 @@ function App() {
     }));
   };
 
+  // Function to get just the letter (like your original!)
+  const getStatusLetter = (status) => {
+    switch (status) {
+      case "Present":
+        return "P";
+      case "Absent":
+        return "A";
+      case "Vacation":
+        return "V";
+      default:
+        return "P";
+    }
+  };
+
   return (
     <div className="app">
       <h1>My Absence Management Grid</h1>
 
-      <div className="calendar-grid">
-        {/* Header row with days */}
-        <div className="grid-header">
-          <div className="employee-name-header">Employee</div>
-          {weekDays.map((day) => (
-            <div key={day} className="day-header">
-              {day}
-            </div>
-          ))}
-        </div>
-
-        {/* Employee rows */}
-        {employees.map((employee) => (
-          <div key={employee.id} className="employee-row">
-            <div className="employee-info">
-              <strong>{employee.name}</strong>
-              <br />
-              <small>{employee.department}</small>
-            </div>
-
-            {/* Status for each day */}
+      <div className="calendar-container">
+        <div className="calendar-grid">
+          {/* Header row */}
+          <div className="grid-header">
+            <div className="employee-header">Employee</div>
             {weekDays.map((day) => (
-              <div key={day} className="day-cell">
-                <select
-                  value={employeeStatus[employee.id][day]}
-                  onChange={(e) =>
-                    changeStatus(employee.id, day, e.target.value)
-                  }
-                  className={`status-select ${employeeStatus[employee.id][
-                    day
-                  ].toLowerCase()}`}
-                >
-                  <option value="Present">P</option>
-                  <option value="Absent">A</option>
-                  <option value="Vacation">V</option>
-                </select>
+              <div key={day} className="day-header">
+                {day}
               </div>
             ))}
           </div>
-        ))}
+
+          {/* Employee rows */}
+          {employees.map((employee) => (
+            <div key={employee.id} className="employee-row">
+              <div className="employee-info">
+                <div className="employee-name">{employee.name}</div>
+                <div className="employee-dept">{employee.department}</div>
+              </div>
+
+              {weekDays.map((day) => (
+                <div key={day} className="day-cell">
+                  <select
+                    value={employeeStatus[employee.id][day]}
+                    onChange={(e) =>
+                      changeStatus(employee.id, day, e.target.value)
+                    }
+                    className={`status-select ${employeeStatus[employee.id][
+                      day
+                    ].toLowerCase()}`}
+                  >
+                    <option value="Present">Present</option>
+                    <option value="Absent">Absent</option>
+                    <option value="Vacation">Vacation</option>
+                  </select>
+                  {/* This shows just the letter like your original! */}
+                  <div
+                    className={`status-badge ${employeeStatus[employee.id][
+                      day
+                    ].toLowerCase()}`}
+                  >
+                    {getStatusLetter(employeeStatus[employee.id][day])}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
